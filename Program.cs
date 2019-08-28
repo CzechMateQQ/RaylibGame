@@ -12,8 +12,8 @@ namespace ConsoleApp1
             bool rtn = false;
             Rectangle PickUpColl;
             //= new Rectangle(_pu.Position.x - 10, _pu.Position.y - 10, 20, 20);
-            float w = Pickup.MyTexture.width * 0.25f;
-            float h = Pickup.MyTexture.height * 0.25f;
+            float w = Pickup.MyTexture.width * 0.5f;
+            float h = Pickup.MyTexture.height * 0.5f;
 
             PickUpColl = new Rectangle(_pu.Position.x - 0.5f * w, _pu.Position.y - 0.5f * h, w, h);
 
@@ -33,7 +33,11 @@ namespace ConsoleApp1
             int screenWidth = 800;
             int screenHeight = 450;
 
+            bool gameOver = false;
+            bool pause = false;
+
             int score = 0;
+            int hiScore = 0;
 
             Player myPlayer = new Player();
             myPlayer.Position.x = 50;
@@ -45,13 +49,19 @@ namespace ConsoleApp1
             rl.InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
             Pickup.SetTexture("diamond.png");
-            Pickup.LoadSound("laser1.ogg");
 
-            for (int x = 100; x < 700 && idx < 10; x+= 40)
+            rl.InitAudioDevice();
+            Pickup.SetSound("laser1.ogg");
+            Pickup.PlayClip();
+
+            Random rand = new Random();
+            int randInt = rand.Next();
+            
+            for (int x = 100; x < 700 && idx < 10; x+= 60)
             {
                 Test[idx] = new Pickup();
                 Test[idx].Position.x = x;
-                Test[idx].Position.y = 150;
+                Test[idx].Position.y = rand.Next(75, 400);
                 idx++;
             }
 
@@ -73,7 +83,15 @@ namespace ConsoleApp1
 
                 rl.ClearBackground(Color.LIGHTGRAY);
                 rl.DrawText($"Score: {score}", 50, 50, 30, Color.DARKBLUE);
-                rl.DrawText($"Time Limit: {myPlayer.timer/60}", 500, 50, 30, Color.DARKBLUE);
+                rl.DrawText($"Timer: {myPlayer.timer/60} / 30", 500, 50, 30, Color.DARKBLUE);
+
+                if (myPlayer.timer >= 300)
+                {
+                    rl.DrawText("You Lose ):", 250, 350, 50, Color.BLACK);
+                    myPlayer.playerEnabled = false;
+                    gameOver = true;
+                    pause = false;
+                }
 
 
                 myPlayer.Draw();
@@ -107,6 +125,23 @@ namespace ConsoleApp1
                         {
                             score++;
                         }
+                    }
+                }
+
+                if (!gameOver)
+                {
+                    if (hiScore > score)
+                    {
+                        hiScore = score;
+                    }
+                }
+
+                else
+                {
+                    if (rl.IsKeyPressed(KeyboardKey.KEY_ENTER))
+                    {
+                        rl.InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+                        gameOver = false;
                     }
                 }
 

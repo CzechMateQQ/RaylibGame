@@ -14,9 +14,10 @@ namespace ConsoleApp1
     }
     class Player
     {
-        public int timer = 30;
+        public int timer = 0;
         public Vector2Int Position = new Vector2Int();
         public Color MyColor = Color.MAROON;
+        public bool playerEnabled = true;
 
         public void RunUpdate()
         {
@@ -45,6 +46,11 @@ namespace ConsoleApp1
         }
         public void Draw()
         {
+            if (!playerEnabled)
+            {
+                return;
+            }
+
             rl.DrawCircle(Position.x, Position.y, 9f, MyColor);
             rl.DrawCircle(Position.x - 3, Position.y - 1, 2f, Color.BLACK);
             rl.DrawCircle(Position.x + 3, Position.y - 1, 2f, Color.BLACK);

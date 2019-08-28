@@ -21,9 +21,14 @@ namespace ConsoleApp1
             MyTexture = rl.LoadTexture(_Filename);
         }
 
-        public static void LoadSound(string _Filename)
+        public static void SetSound(string _Filename)
         {
             MySound = rl.LoadSound(_Filename);
+        }
+
+        public static void PlayClip()
+        {
+             rl.PlaySound(MySound);
         }
 
         public void Draw()
@@ -33,7 +38,7 @@ namespace ConsoleApp1
                 return;
             }
 
-            rl.DrawTextureEx(MyTexture, new Vector2(Position.x, Position.y), 0f, 1.0f, Color.WHITE);
+            rl.DrawTextureEx(MyTexture, new Vector2(Position.x, Position.y), 0f, 0.5f, Color.WHITE);
 
         }
     }
